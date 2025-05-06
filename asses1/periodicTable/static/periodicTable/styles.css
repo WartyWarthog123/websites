@@ -1,0 +1,20 @@
+h1 {
+    font-family: sans-serif;
+    font-size: 30px;
+    text-align: center;
+}
+
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: rgb(255, 255, 255);
+    height: 20%;
+}
+
+div {
+    padding: 20px;
+    background-color: #f1f1f1;
+    height: 80%;
+}
