@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Question Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .question-box {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .hidden {
+        display: none;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Study Question Generator</h1>
+
+      <!-- Form to add questions -->
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="question">Question:</label>
+          <input type="text" id="question" name="question" required />
+        </div>
+        <div class="form-group">
+          <label for="answer">Answer:</label>
+          <input type="text" id="answer" name="answer" required />
+        </div>
+        <button type="submit">Add Question</button>
+      </form>
+
+      <!-- Display all questions -->
+      <h2>Saved Questions</h2>
+      <ul>
+        {% for q in questions %}
+        <li>{{ q.question_text }} - {{ q.answer_text }}</li>
+        {% endfor %}
+      </ul>
+
+      <!-- Random Question Box -->
+      <div class="question-box">
+        <h2>Random Question</h2>
+        <button id="get-question-btn">Get Random Question</button>
+        <div id="question-display" class="hidden">
+          <p id="random-question"></p>
+          <input type="text" id="user-answer" placeholder="Your Answer" />
+          <button id="submit-answer-btn">Submit Answer</button>
+          <p id="result-message"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("get-question-btn");
+      document.addEventListener("click", function () {
+        fetch("/get-random-question/");
+        document.then((response) => response.json());
+        document.then((data) => {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            document.getElementById("random-question").textContent =
+              data.question;
+            document
+              .getElementById("question-display")
+              .classList.remove("hidden");
+            document.querySelector("#submit-answer-btn").dataset.correctAnswer =
+              data.answer;
+          }
+        });
+      });
+
+      document.getElementById("submit-answer-btn");
+      document.addEventListener("click", function () {
+        const userAnswer = document.getElementById("user-answer").value;
+        const correctAnswer = this.dataset.correctAnswer;
+
+        fetch("/check-answer/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: `user_answer=${encodeURIComponent(
+            userAnswer
+          )}&correct_answer=${encodeURIComponent(correctAnswer)}`,
+        });
+        document.then((response) => response.json());
+        document.then((data) => {
+          const resultMessage = document.getElementById("result-message");
+          if (data.is_correct) {
+            resultMessage.textContent = "Correct! Well done!";
+            resultMessage.className = "success";
+          } else {
+            resultMessage.textContent = `Incorrect! The correct answer is: ${data.correct_answer}`;
+            resultMessage.className = "error";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

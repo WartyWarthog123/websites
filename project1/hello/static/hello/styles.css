@@ -1,0 +1,50 @@
+h1{
+    font-family: sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.question {
+    margin: 20px 20px 20px 20px;
+    font-size: 20px;
+}
+
+.answer {
+    margin: 20px 20px 20px 20px;
+    font-size: 20px;
+}
+
+#revealBtn {
+    margin: 20px 20px 20px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    height: 20%;
+}
+
+nav {
+    float: left;
+    width: 47%;
+    background: #f1f1f1;
+    padding: 20px;
+    height: 80%;
+}
+
+article {
+    float: right;
+    padding: 20px;
+    width: 47%;
+    background-color: #f1f1f1;
+    height: 80%;
+}
